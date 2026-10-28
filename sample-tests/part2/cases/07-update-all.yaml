@@ -1,0 +1,16 @@
+fixture: 07-update-all.yaml
+
+expected:
+  status: ok
+  result: planned
+  operation: update
+  changes:
+    ipv4:
+      from: 172.30.9.1/32
+      to: 172.30.5.1/32
+    description:
+      from: IPA2026-67070xxx
+      to: IPA2026-67070148
+    admin_state:
+      from: down
+      to: up
