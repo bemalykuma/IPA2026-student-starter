@@ -61,9 +61,9 @@ def validate_request(data):
             return error("missing_ipv4")
         if not interface.get("description"):
             return error("missing_description")
-        if "admin_status" not in interface or interface["admin_status"] is None:
+        if "admin_state" not in interface or interface["admin_state"] is None:
             return error("missing_admin_state")
-        if interface["admin_status"] not in ("up", "down"):
+        if interface["admin_state"] not in ("up", "down"):
             return error("invalid_admin_state")
     return {"status": "ok", "result": "accepted"}
 
