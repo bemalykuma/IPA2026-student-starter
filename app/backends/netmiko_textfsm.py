@@ -1,6 +1,7 @@
 import os
 
 from netmiko import ConnectHandler, NetmikoAuthenticationException, NetmikoTimeoutException, ReadTimeout
+from netmiko.utilities import get_structured_data_textfsm
 
 TIMEOUT = 8
 
@@ -35,11 +36,18 @@ def _connect(router):
 
 def _read(conn, interface_name):
     """ให้ TextFSM แปลง output ของ show interface เป็น dict"""
-    ip_info = conn.send_command(
-        f"show ip interface {interface_name}", use_textfsm=True
-    )
+    command = f"show ip interface {interface_name}"
+    raw = conn.send_command(command)
+
+    if "Invalid input" in raw or raw.strip().startswith("%"):
+        ip_info = []
+    else:
+        ip_info = get_structured_data_textfsm(
+            raw, platform="cisco_ios", command=command
+        )
+
     descriptions = conn.send_command(
-        f"show interfaces description", use_textfsm=True
+        "show interfaces description", use_textfsm=True
     )
 
     if not isinstance(ip_info, list):
